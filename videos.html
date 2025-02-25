@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecture Selection</title>
+    <style>
+        body { background-color: black; color: white; text-align: center; padding: 20px; }
+        h1 { font-size: 24px; }
+        .lecture { margin: 10px 0; padding: 10px; border: 1px solid white; cursor: pointer; background-color: #333; }
+        .lecture:hover { background-color: #555; }
+    </style>
+</head>
+<body>
+    <h1>Select a Lecture</h1>
+    <div id="lectureList"></div>
+
+    <script>
+        fetch("videos.json")
+            .then(response => response.json())
+            .then(data => {
+                let lectureList = document.getElementById("lectureList");
+                data.forEach(lecture => {
+                    let div = document.createElement("div");
+                    div.classList.add("lecture");
+                    div.innerHTML = `<strong>${lecture.chapter}</strong><br>${lecture.title}`;
+                    div.onclick = () => {
+                        let videoId = extractVideoId(lecture.videoUrl);
+                        let speed = 1.5;
+                        let time = 1800;
+                        window.location.href = `player.html?videoId=${videoId}&speed=${speed}&time=${time}`;
+                    };
+                    lectureList.appendChild(div);
+                });
+            });
+
+        function extractVideoId(url) {
+            let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|.*\/v\/|.*\/embed\/|.*\/shorts\/))([^?&]+)/);
+            return match ? match[1] : null;
+        }
+    </script>
+</body>
+</html>
