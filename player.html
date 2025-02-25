@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Video</title>
+</head>
+<body>
+    <iframe id="ytPlayer" allowfullscreen allow="autoplay; encrypted-media"></iframe>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoId = urlParams.get('videoId');
+        const speed = urlParams.get('speed');
+        const timeLimit = urlParams.get('time');
+
+        document.getElementById('ytPlayer').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&fs=1`;
+
+        setTimeout(() => {
+            alert("You have completed your session! You can now exit.");
+        }, timeLimit * 1000);
+    </script>
+</body>
+</html>
