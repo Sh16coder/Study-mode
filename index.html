@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Mode - Focus Video</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background-color: black; color: white; text-align: center; display: flex; flex-direction: column;
+               align-items: center; justify-content: center; height: 100vh; width: 100vw; padding: 20px; }
+        .hidden { display: none; }
+        .container { max-width: 500px; width: 90%; }
+        h1 { font-size: 22px; margin-bottom: 10px; }
+        ol { text-align: left; padding-left: 20px; }
+        button { background-color: #ff9800; color: black; border: none; padding: 15px; font-size: 18px; width: 100%;
+                 border-radius: 8px; cursor: pointer; margin-top: 15px; }
+        button:hover { background-color: #e68900; }
+        input, select { width: 100%; padding: 12px; font-size: 16px; margin: 10px 0; border-radius: 8px; border: none; }
+    </style>
+</head>
+<body>
+    <div id="instructionScreen" class="container">
+        <h1>Welcome to Study Mode</h1>
+        <p>Follow these steps for focused study:</p>
+        <ol>
+            <li>Copy the lecture video link from YouTube.</li>
+            <li>Disable or uninstall YouTube to avoid distractions.</li>
+            <li>Close all unnecessary tabs and apps.</li>
+            <li>Use headphones for better focus.</li>
+            <li>Put your phone on "Do Not Disturb" mode.</li>
+        </ol>
+        <button onclick="startStudyMode()">Start</button>
+    </div>
+
+    <div id="studyScreen" class="container hidden">
+        <input type="text" id="videoUrl" placeholder="Enter YouTube video link">
+        <input type="number" id="watchTime" placeholder="Enter time to watch (minutes)">
+        <select id="speedControl">
+            <option value="1">1x (Normal)</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2x</option>
+        </select>
+        <button onclick="loadVideo()">Watch</button>
+        <h3>OR</h3>
+        <button onclick="window.location.href='videos.html'">Select a Lecture</button>
+    </div>
+
+    <script>
+        function startStudyMode() {
+            document.getElementById("instructionScreen").classList.add("hidden");
+            document.getElementById("studyScreen").classList.remove("hidden");
+        }
+
+        function loadVideo() {
+            let url = document.getElementById("videoUrl").value;
+            let time = document.getElementById("watchTime").value * 60;
+            let speed = document.getElementById("speedControl").value;
+            let videoId = extractVideoId(url);
+
+            if (videoId && time > 0) {
+                localStorage.setItem("videoId", videoId);
+                localStorage.setItem("watchTime", time);
+                localStorage.setItem("speed", speed);
+                localStorage.setItem("startTime", Date.now());
+                window.location.href = `player.html?videoId=${videoId}&speed=${speed}&time=${time}`;
+            } else {
+                alert("Enter a valid YouTube link and watch time.");
+            }
+        }
+
+        function extractVideoId(url) {
+            let match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:.*v=|.*\/v\/|.*\/embed\/|.*\/shorts\/))([^?&]+)/);
+            return match ? match[1] : null;
+        }
+    </script>
+</body>
+</html>
